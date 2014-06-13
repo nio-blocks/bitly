@@ -23,15 +23,17 @@ class Bitly(Block):
 
     """
 
-    api_key = StringProperty()
-    link_attr = StringProperty(default="link")
-    bitly_link_attr = StringProperty(allow_none=True)
+    api_key = StringProperty(tile="API Key")
+    link_attr = StringProperty(title="Link Signal Attribute (in)",
+                               default="link")
+    bitly_link_attr = StringProperty(title="Link Signal Attribute (out)",
+                                     allow_none=True)
 
     def process_signals(self, signals):
         for sig in signals:
             if not hasattr(sig, self.link_attr):
                 self._logger.warning("Signal has no attribute %s" %
-                                    self.link_attr)
+                                     self.link_attr)
                 continue
 
             old_link = getattr(sig, self.link_attr)
@@ -42,7 +44,7 @@ class Bitly(Block):
 
             if resp.status_code != 200:
                 self._logger.error("Bitly request returned %s" %
-                                  resp.status_code)
+                                   resp.status_code)
                 continue
 
             data = resp.json()
@@ -61,4 +63,3 @@ class Bitly(Block):
             setattr(sig, new_attr, new_link)
 
         self.notify_signals(signals)
-
