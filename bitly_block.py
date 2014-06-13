@@ -39,16 +39,12 @@ class Bitly(Block):
             old_link = getattr(sig, self.link_attr)
             url = BITLY_SHORTEN_URL % (
                 self.api_key, urllib.parse.quote_plus(old_link))
-            self._logger.debug("Trying to get %s" % url)
-            resp = requests.get(url)
-
-            if resp.status_code != 200:
-                self._logger.error("Bitly request returned %s" %
-                                   resp.status_code)
+            data = self._get_bitly_response(url)
+            if not data:
+                # Bad response form bitly but save off old link
+                # to new link signal attr anyway.
+                self._set_new_attr(sig, old_link)
                 continue
-
-            data = resp.json()
-            self._logger.debug(data)
 
             new_link = old_link
             try:
@@ -58,8 +54,25 @@ class Bitly(Block):
                 self._logger.warning("Could not extract url from response")
                 self._logger.debug(data)
 
-            # Set the attribute back to the original signal object
-            new_attr = self.bitly_link_attr or self.link_attr
-            setattr(sig, new_attr, new_link)
+            self._set_new_attr(sig, new_link)
 
         self.notify_signals(signals)
+
+    def _get_bitly_response(self, url):
+        """Returns bitly json response or None if invalid url."""
+
+        self._logger.debug("Trying to get %s" % url)
+        resp = requests.get(url)
+
+        if resp.status_code != 200:
+            self._logger.error("Bitly request returned %s" %
+                               resp.status_code)
+            return
+
+        data = resp.json()
+        self._logger.debug(data)
+        return data
+
+    def _set_new_attr(self, sig, link):
+        new_attr = self.bitly_link_attr or self.link_attr
+        setattr(sig, new_attr, link)
