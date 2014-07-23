@@ -1,5 +1,5 @@
 from unittest.mock import patch
-from bitly.bitly_block import Bitly
+from ..bitly_block import Bitly
 from nio.util.support.block_test_case import NIOBlockTestCase
 from nio.common.signal.base import Signal
 from unittest.mock import MagicMock
