@@ -1,4 +1,3 @@
-from unittest.mock import patch
 from ..bitly_block import Bitly
 from nio.util.support.block_test_case import NIOBlockTestCase
 from nio.common.signal.base import Signal
@@ -7,6 +6,7 @@ from unittest.mock import MagicMock
 
 class LinkSignal(Signal):
     def __init__(self, link):
+        super().__init__()
         self.link = link
 
 
