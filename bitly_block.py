@@ -1,5 +1,4 @@
 from nio.common.block.base import Block
-from nio.common.versioning.dependency import DependsOn
 from nio.common.discovery import Discoverable, DiscoverableType
 from nio.metadata.properties.string import StringProperty
 
