@@ -1,6 +1,6 @@
-from nio.common.block.base import Block
-from nio.common.discovery import Discoverable, DiscoverableType
-from nio.metadata.properties.string import StringProperty
+from nio.block.base import Block
+from nio.util.discovery import discoverable
+from nio.properties.string import StringProperty
 
 import requests
 import urllib
@@ -9,7 +9,7 @@ BITLY_SHORTEN_URL = "https://api-ssl.bitly.com" + \
                     "/v3/shorten?access_token=%s&longUrl=%s"
 
 
-@Discoverable(DiscoverableType.block)
+@discoverable
 class Bitly(Block):
 
     """ A block that create a bitly url.
@@ -22,7 +22,7 @@ class Bitly(Block):
 
     """
 
-    api_key = StringProperty(tile="API Key")
+    api_key = StringProperty(title="API Key", default="[[BITLY_API_KEY]]")
     link_attr = StringProperty(title="Link Signal Attribute (in)",
                                default="link")
     bitly_link_attr = StringProperty(title="Link Signal Attribute (out)",
@@ -30,14 +30,14 @@ class Bitly(Block):
 
     def process_signals(self, signals):
         for sig in signals:
-            if not hasattr(sig, self.link_attr):
-                self._logger.warning("Signal has no attribute %s" %
-                                     self.link_attr)
+            if not hasattr(sig, self.link_attr()):
+                self.logger.warning("Signal has no attribute %s" %
+                                     self.link_attr())
                 continue
 
-            old_link = getattr(sig, self.link_attr)
+            old_link = getattr(sig, self.link_attr())
             url = BITLY_SHORTEN_URL % (
-                self.api_key, urllib.parse.quote_plus(old_link))
+                self.api_key(), urllib.parse.quote_plus(old_link))
             data = self._get_bitly_response(url)
             if not data:
                 # Bad response form bitly but save off old link
@@ -48,10 +48,10 @@ class Bitly(Block):
             new_link = old_link
             try:
                 new_link = data["data"]["url"]
-                self._logger.debug("New link is %s" % new_link)
+                self.logger.debug("New link is %s" % new_link)
             except (KeyError, TypeError):
-                self._logger.warning("Could not extract url from response")
-                self._logger.debug(data)
+                self.logger.warning("Could not extract url from response")
+                self.logger.debug(data)
 
             self._set_new_attr(sig, new_link)
 
@@ -60,18 +60,18 @@ class Bitly(Block):
     def _get_bitly_response(self, url):
         """Returns bitly json response or None if invalid url."""
 
-        self._logger.debug("Trying to get %s" % url)
+        self.logger.debug("Trying to get %s" % url)
         resp = requests.get(url)
 
         if resp.status_code != 200:
-            self._logger.error("Bitly request returned %s" %
+            self.logger.error("Bitly request returned %s" %
                                resp.status_code)
             return
 
         data = resp.json()
-        self._logger.debug(data)
+        self.logger.debug(data)
         return data
 
     def _set_new_attr(self, sig, link):
-        new_attr = self.bitly_link_attr or self.link_attr
+        new_attr = self.bitly_link_attr() or self.link_attr()
         setattr(sig, new_attr, link)
