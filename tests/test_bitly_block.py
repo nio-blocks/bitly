@@ -1,8 +1,8 @@
 from ..bitly_block import Bitly
-from nio.util.support.block_test_case import NIOBlockTestCase
-from nio.common.signal.base import Signal
+from nio.testing.block_test_case import NIOBlockTestCase
+from nio.signal.base import Signal
 from unittest.mock import MagicMock
-
+from nio.block.terminals import DEFAULT_TERMINAL
 
 class LinkSignal(Signal):
     def __init__(self, link):
@@ -11,13 +11,6 @@ class LinkSignal(Signal):
 
 
 class TestBitly(NIOBlockTestCase):
-
-    def setUp(self):
-        super().setUp()
-        self.last_notified = []
-
-    def signals_notified(self, signals, output_id='default'):
-        self.last_notified = signals
 
     def test_bitly(self):
         link = "http://google.com"
@@ -39,7 +32,7 @@ class TestBitly(NIOBlockTestCase):
         block.process_signals([LinkSignal(link)])
         self.assert_num_signals_notified(1)
         # assert link is updated to bitly_link.
-        self.assertEqual(bitly_link, self.last_notified[0].link)
+        self.assertEqual(bitly_link, self.last_notified[DEFAULT_TERMINAL][0].link)
         block.stop()
 
     def test_bitly_link_attr(self):
@@ -63,9 +56,9 @@ class TestBitly(NIOBlockTestCase):
         block.process_signals([LinkSignal(link)])
         self.assert_num_signals_notified(1)
         # assert bitly_link_attr is updated to new link.
-        self.assertEqual(bitly_link, self.last_notified[0].new_link)
+        self.assertEqual(bitly_link, self.last_notified[DEFAULT_TERMINAL][0].new_link)
         # assert original link attr is unchanged.
-        self.assertEqual(link, self.last_notified[0].link)
+        self.assertEqual(link, self.last_notified[DEFAULT_TERMINAL][0].link)
         block.stop()
 
     def test_bad_link_attr(self):
@@ -91,7 +84,7 @@ class TestBitly(NIOBlockTestCase):
         block.process_signals([LinkSignal(link)])
         self.assert_num_signals_notified(1)
         # assert original link attr is unchanged.
-        self.assertEqual(link, self.last_notified[0].link)
+        self.assertEqual(link, self.last_notified[DEFAULT_TERMINAL][0].link)
         block.stop()
 
     def test_bad_api_key(self):
@@ -105,7 +98,7 @@ class TestBitly(NIOBlockTestCase):
         block.process_signals([LinkSignal(link)])
         self.assert_num_signals_notified(1)
         # assert link is unchanged.
-        self.assertEqual(link, self.last_notified[0].link)
+        self.assertEqual(link, self.last_notified[DEFAULT_TERMINAL][0].link)
         block.stop()
 
     def test_bad_api_key_with_bitly_link_attr(self):
@@ -120,7 +113,7 @@ class TestBitly(NIOBlockTestCase):
         block.process_signals([LinkSignal(link)])
         self.assert_num_signals_notified(1)
         # assert link is unchanged.
-        self.assertEqual(link, self.last_notified[0].link)
+        self.assertEqual(link, self.last_notified[DEFAULT_TERMINAL][0].link)
         # assert bitly_link_attr is set to original link.
-        self.assertEqual(link, self.last_notified[0].new_link)
+        self.assertEqual(link, self.last_notified[DEFAULT_TERMINAL][0].new_link)
         block.stop()
