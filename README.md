@@ -6,8 +6,8 @@ A block that creates a bitly url. Each input signal will be sent to output with 
 Properties
 --------------
 
--   **link_signal_attribute (in)**: Attribute of inputs signals that contains a link.
--   **link_signal_attribute (out)**: Attribute to put bitly link on output signals. If unspecified, original link attribute is overridden.
+-   **link_signal_attribute - in**: Attribute of inputs signals that contains a link.
+-   **link_signal_attribute - out**: Attribute to put bitly link on output signals. If unspecified, original link attribute is overridden.
 -   **api_key**: Bitly API Key.
 
 Dependencies
