@@ -1,25 +1,10 @@
 {
-    "nio/Bitly": {
-        "Version": "1.0.0",
-        "Properties": {
-            "api_key": {
-                "description": "Bitly API Key."
-            },
-            "link_signal_attribute - out": {
-                "description": "Attribute to put bitly link on output signals. If unspecified, original link attribute is overridden."
-            },
-            "link_signal_attribute - in": {
-                "description": "Attribute of inputs signals that contains a link."
-            }
-        },
-        "Input": {
-            "Description": "Any list of signals. They should contain the attribute specified in the property `link_signal_attribute (in)`."
-        },
-        "Category": "WebService",
-        "Commands": {},
-        "Description": "A block that creates a bitly url. Each input signal will be sent to output with the bitly link added on.",
-        "Output": {
-            "Description": "Input signals but with the attribute `link_signal_attribute (out)` set to the bitly link generated from the attribute `link_signal_attribute (in)`."
-        }
-    }
+  "nio/Bitly": {
+    "version": "0.0.1",
+    "description": "",
+    "inputs": {},
+    "outputs": {},
+    "properties": {},
+    "commands": {}
+  }
 }
