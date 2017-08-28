@@ -1,7 +1,7 @@
 {
   "nio/Bitly": {
     "language": "Python",
-    "version": "0.0.1",
-    "url": "git://github.com/nio-blocks/bitly.git"
+    "url": "git://github.com/nio-blocks/bitly.git",
+    "version": "1.0.0"
   }
 }

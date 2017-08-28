@@ -1,10 +1,37 @@
 {
   "nio/Bitly": {
-    "version": "0.0.1",
-    "description": "",
-    "inputs": {},
-    "outputs": {},
-    "properties": {},
+    "version": "1.0.0",
+    "description": "A block that creates a bitly url. Each input signal will be sent to output with the bitly link added on.",
+    "properties": {
+      "api_key": {
+        "title": "API Key",
+        "type": "StringType",
+        "description": "Bitly API Key.",
+        "default": "[[BITLY_API_KEY]]"
+      },
+      "bitly_link_attr": {
+        "title": "Link Signal Attribute (out)",
+        "type": "StringType",
+        "description": "Attribute to put bitly link on output signals. If unspecified, original link attribute is overridden.",
+        "default": null
+      },
+      "link_attr": {
+        "title": "Link Signal Attribute (in)",
+        "type": "StringType",
+        "description": "Attribute of inputs signals that contains a link.",
+        "default": "link"
+      }
+    },
+    "inputs": {
+      "default": {
+        "description": "Any list of signals. They should contain the attribute specified in the property `link_signal_attribute (in)`."
+      }
+    },
+    "outputs": {
+      "default": {
+        "description": "Input signals but with the attribute `link_signal_attribute (out)` set to the bitly link generated from the attribute `link_signal_attribute (in)`."
+      }
+    },
     "commands": {}
   }
 }

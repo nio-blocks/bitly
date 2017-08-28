@@ -1,18 +1,17 @@
-from nio.block.base import Block
-from nio.util.discovery import discoverable
-from nio.properties.string import StringProperty
-
 import requests
 import urllib
+
+from nio.block.base import Block
+from nio.properties import StringProperty, VersionProperty
+
 
 BITLY_SHORTEN_URL = "https://api-ssl.bitly.com" + \
                     "/v3/shorten?access_token=%s&longUrl=%s"
 
 
-@discoverable
 class Bitly(Block):
 
-    """ A block that create a bitly url.
+    """ A block that creates a bitly url.
 
     Properties:
         api_key (str): Bitly API Key.
@@ -27,12 +26,13 @@ class Bitly(Block):
                                default="link")
     bitly_link_attr = StringProperty(title="Link Signal Attribute (out)",
                                      allow_none=True)
+    version = VersionProperty("1.0.0")
 
     def process_signals(self, signals):
         for sig in signals:
             if not hasattr(sig, self.link_attr()):
                 self.logger.warning("Signal has no attribute %s" %
-                                     self.link_attr())
+                                    self.link_attr())
                 continue
 
             old_link = getattr(sig, self.link_attr())
@@ -65,7 +65,7 @@ class Bitly(Block):
 
         if resp.status_code != 200:
             self.logger.error("Bitly request returned %s" %
-                               resp.status_code)
+                              resp.status_code)
             return
 
         data = resp.json()
