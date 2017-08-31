@@ -1,6 +1,6 @@
 {
   "nio/Bitly": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A block that creates a bitly url. Each input signal will be sent to output with the bitly link added on.",
     "properties": {
       "api_key": {

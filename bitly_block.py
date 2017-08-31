@@ -26,7 +26,7 @@ class Bitly(Block):
                                default="link")
     bitly_link_attr = StringProperty(title="Link Signal Attribute (out)",
                                      allow_none=True)
-    version = VersionProperty("1.0.0")
+    version = VersionProperty("1.0.1")
 
     def process_signals(self, signals):
         for sig in signals:
